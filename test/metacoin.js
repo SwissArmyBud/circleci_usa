@@ -2,7 +2,6 @@ var MetaCoin = artifacts.require("./MetaCoin");
 
 var CREATION_BOUNTY = 10000;
 var CREDIT_VALUE = 1000;
-var extraGas = web3.eth.gasPrice * 1.2;
 
 contract("New MetaCoin", function (accounts) {
 	
@@ -11,12 +10,12 @@ contract("New MetaCoin", function (accounts) {
 	it("should exist in passthrough", function () {
 		console.log();
 
-		return MetaCoin.new({gasPrice:extraGas}).
+		return MetaCoin.new().
 			then(function (instance) {
 				return instance;
 			}).
 			then(function (instance) {
-				console.log("        - " + instance.address);
+				console.log("    - " + instance.address);
 				// Exists
 				assert.notEqual(instance.address, undefined, "Instance has no address");
 				// Isn't blank
@@ -33,7 +32,7 @@ contract("New MetaCoin", function (accounts) {
 				meta = instance;
 			}).
 			then(function () {
-				console.log("        - " + meta.address);
+				console.log("    - " + meta.address);
 				// Meta exists
 				assert.notEqual(meta.address, undefined, "Meta has no address");
 				// Meta ok
@@ -53,7 +52,7 @@ contract("New MetaCoin", function (accounts) {
 				meta = instance;
 			}).
 			then(function () {
-				console.log("        - " + meta.address);
+				console.log("    - " + meta.address);
 				// Contract is unique
 				assert.notEqual(meta.address, testing.address, "Instance is duplicate");
 			});
@@ -73,8 +72,8 @@ contract("New MetaCoin", function (accounts) {
 				return web3.eth.getBalance(meta.address);
 			}).
 			then(function(balance){
-				console.log("        - " + meta.address);
-				console.log("        - 0 / (" + balance + ")");
+				console.log("    - " + meta.address);
+				console.log("    - " + balance + " / (" + 0 + ")");
 				assert.equal(balance, 0, "Payment acceptance incorrect");
 			});
 	});
@@ -95,8 +94,8 @@ contract("New MetaCoin", function (accounts) {
 				return meta.getBalance.call(account);
 			}).
 			then(function(balance){
-				console.log("        - " + account);
-				console.log("        - " + balance.toNumber() + " / (" + CREATION_BOUNTY + ")");
+				console.log("    - " + account);
+				console.log("    - " + balance.toNumber() + " / (" + CREATION_BOUNTY + ")");
 				assert.equal(balance.toNumber(), CREATION_BOUNTY, "Bounty payment incorrect");
 			});
 	});
@@ -118,7 +117,7 @@ contract("New MetaCoin", function (accounts) {
 			meta = instance;
 			// USED IN NEXT TEST
 			testing = meta;
-			console.log("        - " + meta.address);
+			console.log("    - " + meta.address);
 			return meta.sendCoin(account_two, CREDIT_VALUE, {from: account_one});
 		}).then(function () {
 			return meta.getBalance.call(account_one);
@@ -128,8 +127,8 @@ contract("New MetaCoin", function (accounts) {
 		}).then(function (balance) {
 			account_two_balance = balance.toNumber();
 
-			console.log("        - " + account_one_balance);
-			console.log("        - " + account_two_balance);
+			console.log("    - " + account_one_balance);
+			console.log("    - " + account_two_balance);
 			
 			assert.equal(account_one_balance, (CREATION_BOUNTY - CREDIT_VALUE), "Account 1 isn't what is expected");
 			assert.equal(account_two_balance, CREDIT_VALUE , "Account 2 isn't what is expected");
@@ -151,7 +150,7 @@ contract("New MetaCoin", function (accounts) {
 		return MetaCoin.at(testing.address).
 		then(function (instance) {
 			meta = instance;
-			console.log("        - " + meta.address);
+			console.log("    - " + meta.address);
 			return meta.getBalance.call(account_one);
 		}).then(function (balance) {
 			account_one_balance = balance.toNumber();
@@ -159,8 +158,8 @@ contract("New MetaCoin", function (accounts) {
 		}).then(function (balance) {
 			account_two_balance = balance.toNumber();
 
-			console.log("        - " + account_one_balance);
-			console.log("        - " + account_two_balance);
+			console.log("    - " + account_one_balance);
+			console.log("    - " + account_two_balance);
 
 			assert.equal(account_two_balance, CREDIT_VALUE , "Account 2 unbalanced");
 			assert.equal(account_one_balance, (CREATION_BOUNTY - CREDIT_VALUE), "Account 1 unbalanced");
@@ -180,10 +179,10 @@ contract("New MetaCoin", function (accounts) {
 			then(function(){
 				return meta.getBalanceInEth.call(accounts[0]);
 			}).
-			then(function(balance){
-				console.log("        - " + meta.address);
-				console.log("        - 20000 / (" + (2*CREATION_BOUNTY) + ")");
-				assert.equal(balance, (2*CREATION_BOUNTY), "Library conversion incorrect");
+			then(function(bignum){
+				console.log("    - " + meta.address);
+				console.log("    - " + bignum.toNumber() + " / (" + (2*CREATION_BOUNTY) + ")");
+				assert.equal(bignum.toNumber(), 2*CREATION_BOUNTY, "Library conversion incorrect");
 			});
 	});
 });

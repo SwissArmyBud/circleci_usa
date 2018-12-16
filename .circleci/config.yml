@@ -3,38 +3,57 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 #
-version: 2
 jobs:
-  build:
+  testit:
     docker:
-      # specify the version you desire here
-      - image: circleci/node:10.14.2
 
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
+      # specify the node version in this tag
+      - image: circleci/node:10.14.2 # Latest LTS
+
+      # start a ganache testing suite
       - image: trufflesuite/ganache-cli
-        command: ganache-cli -i 1234 -e 100000000000 -l 7000000
+        command: [ -p, "8080",          # PORT
+                   -i, "4321",          # NETWORK ID
+                   -a, "15",            # NUMBER OF ACCTS
+                   -e, "1000000000000", # START BAL
+                   -l, "7600000",       # GAS LIMIT
+                   -g, "20000000000",   # GAS COST
+                 ]
 
     working_directory: ~/repo
 
     steps:
+
+      # Install global node modules as sudo
+      - run: sudo npm i -g truffle
+
+        # Grab the repo
       - checkout
 
-      # Download and cache dependencies
+      # Get/cache dependencies
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
+      # Install/update dependencies as needed
       - run: npm i
-      - run: sudo npm i -g truffle
 
+      # Set/save cache
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      - run: npm test # triggers truffle test
+      # Run tests via "test" script in package.json
+      - run: npm test
+
+workflows:
+  version: 2
+  branch-testing:
+    jobs:
+      - testit:
+          filters:
+            branches:
+              only: /(^test\-.*)|(master)/
