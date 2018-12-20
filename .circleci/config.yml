@@ -27,7 +27,7 @@ jobs:
       # Install global node modules as sudo
       - run: sudo npm i -g truffle
 
-        # Grab the repo
+      # Grab the repo
       - checkout
 
       # Get/cache dependencies
