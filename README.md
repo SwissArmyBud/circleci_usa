@@ -1,2 +1,2 @@
 # circleci_truffle
-Simple skeleton for running CI on an ethereum backed project
+Simple skeleton for running CI on an ethereum backed projects
