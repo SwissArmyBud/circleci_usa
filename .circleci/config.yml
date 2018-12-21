@@ -56,9 +56,9 @@ jobs:
 #-- UNIT TESTING FOR NODEJS BRANCHES --#
 #--------------------------------------#
   unit_test_node:
-      docker:
-        # Primary docker image containing nodejs
-        - image: circleci/node:10.14.2 # Latest LTS
+    docker:
+      # Primary docker image containing nodejs
+      - image: circleci/node:10.14.2 # Latest LTS
 
       working_directory: ~/repo
 
@@ -90,23 +90,18 @@ jobs:
 #-- UNIT TESTING FOR GOLANG BRANCHES --#
 #--------------------------------------#
   unit_test_go:
-      docker:
-        # Primary docker image containing golang
-        - image: circleci/golang:1.8 # LTS
-
-      # Environment variables for primary image
-        environment:
-          POSTGRES_USER: conductor
-          POSTGRES_DB: conductor_test
+    docker:
+      # Primary docker image containing golang
+      - image: circleci/golang:1.8 # LTS
 
       working_directory: ~/repo
 
-      steps:
-        # Primary docker image containing golang
-        - checkout
+    steps:
+      # Primary docker image containing golang
+      - checkout
 
-        # Run test suite in verbose mode
-        - run: go test -v ./services/go-*/ -argkey argval
+      # Run test suite in verbose mode
+      - run: go test -v ./services/go-*/ -argkey argval
 
 workflows:
   version: 2
