@@ -1,4 +1,4 @@
-/* 
+/*
 Truffle config docs can be found at:
 https://truffleframework.com/docs/truffle/reference/configuration
 */

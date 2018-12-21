@@ -1,16 +1,19 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
-#
-jobs:
-  testit:
-    docker:
+## Circle CI config for testing with:
+## - CI workflows
+## - Multiple languages
+## - Branch filtering for jobs
 
-      # specify the node version in this tag
+jobs:
+
+#--------------------------------------#
+#-- UNIT TESTING FOR GOLANG BRANCHES --#
+#--------------------------------------#
+  unit_test_truffle:
+    docker:
+      # Primary docker image containing nodejs
       - image: circleci/node:10.14.2 # Latest LTS
 
-      # start a ganache testing suite
+      # Start a ganache test suite inside the primary image
       - image: trufflesuite/ganache-cli
         command: [ -p, "8080",          # PORT
                    -i, "4321",          # NETWORK ID
@@ -47,13 +50,72 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # Run tests via "test" script in package.json
-      - run: npm test
+      - run: sudo npm run unit_test_sol
+
+#--------------------------------------#
+#-- UNIT TESTING FOR NODEJS BRANCHES --#
+#--------------------------------------#
+  unit_test_node:
+    docker:
+      # Primary docker image containing nodejs
+      - image: circleci/node:10.14.2 # Latest LTS
+
+    working_directory: ~/repo
+
+    steps:
+
+      # Grab the repo
+      - checkout
+
+      # Get/cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      # Install/update dependencies as needed
+      - run: npm i
+
+      # Set/save cache
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      # Run test suite
+      - run: npm test ./services/js-*/
+
+#--------------------------------------#
+#-- UNIT TESTING FOR GOLANG BRANCHES --#
+#--------------------------------------#
+  unit_test_go:
+    docker:
+      # Primary docker image containing golang
+      - image: circleci/golang:1.8 # LTS
+
+    working_directory: ~/repo
+
+    steps:
+      # Primary docker image containing golang
+      - checkout
+
+      # Run test suite in verbose mode
+      - run: go test -v ./services/go-*/ -argkey argval
 
 workflows:
   version: 2
-  branch-testing:
+  testing-suite:
     jobs:
-      - testit:
+      - unit_test_go:
           filters:
             branches:
-              only: /(^test\-.*)|(master)/
+              only: /(^go\-.*)|(^unit\-test.*)|(^staging\-.*)/
+      - unit_test_truffle:
+          filters:
+            branches:
+              only: /(^sol\-.*)|(^unit\-test.*)|(^staging\-.*)/
+      - unit_test_js:
+          filters:
+            branches:
+              only: /(^js\-.*)|(^unit\-test.*)|(^staging\-.*)/

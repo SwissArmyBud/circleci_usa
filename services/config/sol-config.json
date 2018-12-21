@@ -1,10 +1,10 @@
 {
-  "name": "circle_circus",
+  "name": "tricle",
   "version": "1.0.0",
   "description": "Truffle/Circle",
   "main": "truffle-config.js",
-  "scripts": {
-    "unit_test_sol": "./services/config/test-sol.sh"
+  "directories": {
+    "test": "test"
   },
   "repository": {
     "type": "git",
@@ -17,8 +17,6 @@
   },
   "homepage": "https://github.com/SwissArmyBud/circleci_truffle#readme",
   "dependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^5.2.0",
     "truffle": "^4.1.14",
     "web3": "^1.0.0-beta.37"
   }
