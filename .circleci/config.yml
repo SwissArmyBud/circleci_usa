@@ -60,7 +60,7 @@ jobs:
       # Primary docker image containing nodejs
       - image: circleci/node:10.14.2 # Latest LTS
 
-      working_directory: ~/repo
+    working_directory: ~/repo
 
     steps:
 
@@ -94,7 +94,7 @@ jobs:
       # Primary docker image containing golang
       - image: circleci/golang:1.8 # LTS
 
-      working_directory: ~/repo
+    working_directory: ~/repo
 
     steps:
       # Primary docker image containing golang
