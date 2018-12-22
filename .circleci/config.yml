@@ -5,9 +5,9 @@
 
 jobs:
 
-#--------------------------------------#
-#-- UNIT TESTING FOR GOLANG BRANCHES --#
-#--------------------------------------#
+#----------------------------------------#
+#-- UNIT TESTING FOR SOLIDITY BRANCHES --#
+#----------------------------------------#
   unit_test_truffle:
     docker:
       # Primary docker image containing nodejs
@@ -51,6 +51,9 @@ jobs:
 
       # Run tests via "test" script in package.json
       - run: npm run unit_test_sol
+      # Store testing artifacts
+      - store_artifacts:
+          path: ~/repo/services/artifacts
 
 #--------------------------------------#
 #-- UNIT TESTING FOR NODEJS BRANCHES --#
@@ -83,8 +86,11 @@ jobs:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
-      # Run test suite
-      - run: npm test ./services/js-*/
+      # Run tests via "test" script in package.json
+      - run: npm run unit_test_js
+      # Store testing artifacts
+      - store_artifacts:
+          path: ~/repo/services/artifacts
 
 #--------------------------------------#
 #-- UNIT TESTING FOR GOLANG BRANCHES --#
@@ -97,8 +103,6 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      # Run test suite script
-      - run: go get -u github.com/jstemmer/go-junit-report
 
       # Get repository from VCS
       - checkout
@@ -107,9 +111,28 @@ jobs:
       - run: ./services/config/test-go.sh
       # Store testing artifacts
       - store_artifacts:
-          path: /services/artifacts
-      - store_test_results:
-          path: /services/results
+          path: ~/repo/services/artifacts
+
+  #----------------------------------------#
+  #-- UNIT TESTING FOR DARTLANG BRANCHES --#
+  #----------------------------------------#
+    unit_test_dart:
+      docker:
+        # Primary docker image containing golang
+        - image: google/dart:2.1
+
+      working_directory: ~/repo
+
+      steps:
+
+        # Get repository from VCS
+        - checkout
+
+        # Run test suite script
+        - run: ./services/config/test-dart.sh
+        # Store testing artifacts
+        - store_artifacts:
+            path: ~/repo/services/artifacts
 
 workflows:
   version: 2
@@ -127,3 +150,7 @@ workflows:
           filters:
             branches:
               only: /(^js\-.*)|(^unit\-test.*)|(^staging\-.*)/
+      - unit_test_dart:
+          filters:
+            branches:
+              only: /(^dart\-.*)|(^unit\-test.*)|(^staging\-.*)/
