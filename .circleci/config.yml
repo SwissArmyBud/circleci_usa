@@ -64,7 +64,7 @@ jobs:
 
     steps:
 
-      # Grab the repo
+      # Get repository from VCS
       - checkout
 
       # Get/cache dependencies
@@ -92,16 +92,24 @@ jobs:
   unit_test_go:
     docker:
       # Primary docker image containing golang
-      - image: circleci/golang:1.8 # LTS
+      - image: circleci/golang:1.11
 
     working_directory: ~/repo
 
     steps:
-      # Primary docker image containing golang
+      # Run test suite script
+      - run: go get -u github.com/jstemmer/go-junit-report
+
+      # Get repository from VCS
       - checkout
 
-      # Run test suite in verbose mode
-      - run: go test -v ./services/go-*/ -argkey argval
+      # Run test suite script
+      - run: ./services/config/test-go.sh
+      # Store testing artifacts
+      - store_artifacts:
+          path: /services/artifacts
+      - store_test_results:
+          path: /services/results
 
 workflows:
   version: 2
