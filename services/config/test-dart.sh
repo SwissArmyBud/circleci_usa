@@ -3,7 +3,7 @@
 # Grab working directory
 BASE=$(pwd)
 # Grab test directories
-TESTS=$(ls $BASE/services/ | grep go-)
+TESTS=$(ls $BASE/services/ | grep dart-)
 
 # Create artifacts directory
 mkdir $BASE/services/artifacts
