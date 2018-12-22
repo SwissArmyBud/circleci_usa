@@ -97,8 +97,6 @@ jobs:
     working_directory: ~/repo
 
     steps:
-      # Run test suite script
-      - run: go get -u github.com/jstemmer/go-junit-report
 
       # Get repository from VCS
       - checkout
@@ -107,9 +105,7 @@ jobs:
       - run: ./services/config/test-go.sh
       # Store testing artifacts
       - store_artifacts:
-          path: /services/artifacts
-      - store_test_results:
-          path: /services/results
+          path: ~/repo/services/artifacts
 
 workflows:
   version: 2
