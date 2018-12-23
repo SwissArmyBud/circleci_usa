@@ -22,11 +22,11 @@ main() {
     print("Testing suite setup finished...");
   });
 
-  for (var testCase in tests) {
-    test("Validate sizing library against TestRig", () {
+  test("Validate sizing library against TestRig", () {
+    for (var testCase in tests) {
       expect(testCase._out, equals(sizer.Size(testCase._in)));
-    });
-  }
+    }
+  });
 
   tearDown(() async {
     // Do async cleanup stuffs
