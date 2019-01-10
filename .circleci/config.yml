@@ -46,7 +46,7 @@ jobs:
 #--------------------------------------#
 #-- UNIT TESTING FOR NODEJS BRANCHES --#
 #--------------------------------------#
-  unit_test_node:
+  unit_test_js:
     docker:
       # Primary docker image containing nodejs
       - image: circleci/node:10.14.2 # Latest LTS
