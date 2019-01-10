@@ -15,6 +15,7 @@ jobs:
 
       # Start a ganache test suite inside the primary image
       - image: trufflesuite/ganache-cli
+        # This config must match the solidity project's truffle.js module config
         command: [ -p, "8080",          # PORT
                    -i, "4321",          # NETWORK ID
                    -a, "15",            # NUMBER OF ACCTS
@@ -25,32 +26,19 @@ jobs:
 
     working_directory: ~/repo
 
+    environment:
+      CI_LANGUAGE_PREFIX: sol
+
     steps:
-
-      # Install global node modules as sudo
-      - run: sudo npm i -g truffle
-
-      # Grab the repo
+      # Get repository from VCS
       - checkout
 
-      # Get/cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+      # Run test suite script
+      - run:
+          name: Execute Service Runner
+          command: |
+            ./runner.sh
 
-      # Install/update dependencies as needed
-      - run: npm i
-
-      # Set/save cache
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-
-      # Run tests via "test" script in package.json
-      - run: npm run unit_test_sol
       # Store testing artifacts
       - store_artifacts:
           path: ~/repo/services/artifacts
@@ -65,29 +53,19 @@ jobs:
 
     working_directory: ~/repo
 
-    steps:
+    environment:
+      CI_LANGUAGE_PREFIX: js
 
+    steps:
       # Get repository from VCS
       - checkout
 
-      # Get/cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+      # Run test suite script
+      - run:
+          name: Execute Service Runner
+          command: |
+            ./runner.sh
 
-      # Install/update dependencies as needed
-      - run: npm i
-
-      # Set/save cache
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-
-      # Run tests via "test" script in package.json
-      - run: npm run unit_test_js
       # Store testing artifacts
       - store_artifacts:
           path: ~/repo/services/artifacts
@@ -102,13 +80,19 @@ jobs:
 
     working_directory: ~/repo
 
-    steps:
+    environment:
+      CI_LANGUAGE_PREFIX: go
 
+    steps:
       # Get repository from VCS
       - checkout
 
       # Run test suite script
-      - run: ./services/config/test-go.sh
+      - run:
+          name: Execute Service Runner
+          command: |
+            ./runner.sh
+
       # Store testing artifacts
       - store_artifacts:
           path: ~/repo/services/artifacts
@@ -118,33 +102,27 @@ jobs:
 #----------------------------------------#
   unit_test_dart:
     docker:
-      # Primary docker image containing golang
-      - image: google/dart:2.1
+      # Primary docker image containing nodejs and bundled browsers
+      - image: swissarmybud/dart:2.1-browsers
 
     working_directory: ~/repo
 
-    steps:
+    environment:
+      CI_LANGUAGE_PREFIX: dart
 
+    steps:
       # Get repository from VCS
       - checkout
 
-      # Get/cache dependencies
-      - restore_cache:
-          keys:
-          # Restore system package cache
-          - v1-dependencies-dart
-
       # Run test suite script
-      - run: ./services/config/test-dart.sh
+      - run:
+          name: Execute Service Runner
+          command: |
+            ./runner.sh
+
       # Store testing artifacts
       - store_artifacts:
           path: ~/repo/services/artifacts
-
-      # Set/save cache
-      - save_cache:
-          paths:
-            - ~/.pub-cache
-          key: v1-dependencies-dart
 
 workflows:
   version: 2
@@ -153,16 +131,16 @@ workflows:
       - unit_test_go:
           filters:
             branches:
-              only: /(^go\-.*)|(^unit\-test.*)|(^staging\-.*)/
+              only: /(^go\-.*)/
       - unit_test_truffle:
           filters:
             branches:
-              only: /(^sol\-.*)|(^unit\-test.*)|(^staging\-.*)/
+              only: /(^sol\-.*)/
       - unit_test_js:
           filters:
             branches:
-              only: /(^js\-.*)|(^unit\-test.*)|(^staging\-.*)/
+              only: /(^js\-.*)/
       - unit_test_dart:
           filters:
             branches:
-              only: /(^dart\-.*)|(^unit\-test.*)|(^staging\-.*)/
+              only: /(^dart\-.*)/

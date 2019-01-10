@@ -2,6 +2,7 @@
 Truffle config docs can be found at:
 https://truffleframework.com/docs/truffle/reference/configuration
 */
+// This config must match the .circleci/config.yml truffle container config
 module.exports = {
   networks: {
     development: {
