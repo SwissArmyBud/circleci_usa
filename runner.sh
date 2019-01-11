@@ -21,6 +21,8 @@ function failOnBadExit() {
 # Grab current language precursor from CircleCI YAML injection
 # https://circleci.com/docs/2.0/env-vars/
 echo "[INFO] -> Current language prefix is: $CI_LANGUAGE_PREFIX"
+echo
+
 # Run language specific setup steps
 case "$CI_LANGUAGE_PREFIX" in
   dart)
@@ -43,12 +45,17 @@ SERVICES=$(ls $BASE/services/ | grep "$CI_LANGUAGE_PREFIX-")
 # For each service directory
 for SERVICE in $SERVICES ; do
 
+  # Space it out
+  echo
+  echo
+
   # Move into test directory
   cd $BASE/services/$SERVICE
 
   # Run pre-ci scripting for project dependant vars, etc
   echo "[INFO] -> Running prerunCI source for project: $SERVICE"
   source "./CI/prerunCI.sh"
+  echo
 
   # Optionally, include some filtered actions
   if [[ -n "$CI_SERVICE_FILTER" ]] # Loaded from CircleCI project settings
@@ -65,6 +72,7 @@ for SERVICE in $SERVICES ; do
     else
       echo "[WARN] -> No \$CI_SERVICE_FILTER variable found in ENV!"
   fi
+  echo
 
   # Do certian things for the current project branch
   if [[ $CIRCLE_BRANCH == $SERVICE ]] # From CI env vars for each build
@@ -77,9 +85,11 @@ for SERVICE in $SERVICES ; do
       # Skip other projects
       echo "[WARN] -> This project is being ignored by CI as unlinked to branch!"
   fi
+  echo
 
   # Run post-ci scripting for project dependant vars, etc
   echo "[INFO] -> Running postrunCI source for project: $SERVICE"
   source "./CI/postrunCI.sh"
+  echo
 
 done
