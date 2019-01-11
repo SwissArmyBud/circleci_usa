@@ -5,8 +5,10 @@ pub get
 failOnBadExit $?
 echo
 
-# Set bulid platform
+# Set bulid platform for Server/VM
 DART_BUILD_PLATFORM="vm"
+# Set bulid platform for Web/UI
+# DART_BUILD_PLATFORM="chrome"
 
 # Run Server/VM tests and tee output to report, fail shell on bad exit
 pub run test -p $DART_BUILD_PLATFORM --reporter expanded |
