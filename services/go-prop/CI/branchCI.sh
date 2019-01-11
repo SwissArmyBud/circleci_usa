@@ -1,5 +1,3 @@
-
-
 echo "[INFO] -> Running actions for branch $SERVICE..."
 
 GO_TEST_TYPE="Unit"
