@@ -1,3 +1,4 @@
 name: "testing_prop"
 dependencies:
   test:
+  build_runner:
