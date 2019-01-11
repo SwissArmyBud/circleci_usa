@@ -1,5 +1,5 @@
 name: "testing_prop"
 dev_dependencies:
   test:
-  build_runner:
-  build_test:
+# Web/UI Projects
+# build_runner:
