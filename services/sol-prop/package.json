@@ -1,7 +1,7 @@
 {
   "name": "sol_prop",
   "version": "1.0.0",
-  "description": "A Solidity prop project for CircleCI integration in uSE",
+  "description": "A Solidity prop project for CircleCI integration into uSE",
   "author": "",
   "license": "ISC",
   "dependencies": {
