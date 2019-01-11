@@ -43,12 +43,17 @@ SERVICES=$(ls $BASE/services/ | grep "$CI_LANGUAGE_PREFIX-")
 # For each service directory
 for SERVICE in $SERVICES ; do
 
+  # Space it out
+  echo
+  echo
+
   # Move into test directory
   cd $BASE/services/$SERVICE
 
   # Run pre-ci scripting for project dependant vars, etc
   echo "[INFO] -> Running prerunCI source for project: $SERVICE"
   source "./CI/prerunCI.sh"
+  echo
 
   # Optionally, include some filtered actions
   if [[ -n "$CI_SERVICE_FILTER" ]] # Loaded from CircleCI project settings
@@ -60,6 +65,7 @@ for SERVICE in $SERVICES ; do
           # Run filter-defined actions for the project
           echo "[INFO] -> Running filterCI source for project: $SERVICE"
           source "./CI/filterCI.sh"
+          echo
         fi
       done
     else
@@ -73,6 +79,7 @@ for SERVICE in $SERVICES ; do
       # Run branch-defined actions for the project
       echo "[INFO] -> Running branchCI source for project: $SERVICE"
       source "./CI/branchCI.sh"
+      echo
     else
       # Skip other projects
       echo "[WARN] -> This project is being ignored by CI as unlinked to branch!"
@@ -81,5 +88,6 @@ for SERVICE in $SERVICES ; do
   # Run post-ci scripting for project dependant vars, etc
   echo "[INFO] -> Running postrunCI source for project: $SERVICE"
   source "./CI/postrunCI.sh"
+  echo
 
 done
