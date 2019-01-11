@@ -1,4 +1,5 @@
-# Multi-Service CircleCI Production Manager
+# Micro-Service Architecture CI
+#### (uSA) CircleCI Production Manager
 
 ## Intro
 The system implemented here allows for a micro-service-architecture (uSA) that can be flexibly developed and deployed via a CircleCI integration.
