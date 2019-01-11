@@ -35,7 +35,7 @@ case "$CI_LANGUAGE_PREFIX" in
     ;;
   sol)
     # Truffle has to be installed globally by sudo
-    sudo npm i -g truffle
+    sudo npm i -g truffle --unsafe-perms
     ;;
 esac
 
