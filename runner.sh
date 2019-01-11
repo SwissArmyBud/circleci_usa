@@ -34,8 +34,11 @@ case "$CI_LANGUAGE_PREFIX" in
   js)
     ;;
   sol)
+    mkdir $BASE/npm_global
+    npm set prefix="$BASE/npm_global"
+    export PATH=$BASE/npm_global/bin:$PATH
     # Truffle has to be installed globally by sudo
-    sudo npm i -g truffle --unsafe-perms
+    npm i -g truffle
     ;;
 esac
 

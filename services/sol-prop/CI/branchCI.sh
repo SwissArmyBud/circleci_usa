@@ -1,7 +1,7 @@
 echo "[INFO] -> Running actions for branch $SERVICE, finished!"
 
 # Get dependencies, fail shell on bad exit
-sudo npm i
+npm i
 failOnBadExit $?
 
 # Run tests and tee output to report, fail shell on bad exit
