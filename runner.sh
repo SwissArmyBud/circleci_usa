@@ -32,13 +32,22 @@ case "$CI_LANGUAGE_PREFIX" in
   go)
     ;;
   js)
-    ;;
-  sol)
+    # Set NPM prefix to avoid permissions issues with circleci user, see:
+    # https://stackoverflow.com/a/50934418
     mkdir $BASE/npm_global
     npm set prefix="$BASE/npm_global"
     export PATH=$BASE/npm_global/bin:$PATH
-    # Truffle has to be installed globally by sudo
-    npm i -g truffle
+    ;;
+  sol)
+    # Set NPM prefix to avoid permissions issues with circleci user, see:
+    # https://stackoverflow.com/a/50934418
+    mkdir $BASE/npm_global
+    npm set prefix="$BASE/npm_global"
+    export PATH=$BASE/npm_global/bin:$PATH
+    # Install latest Truffle v4
+    # TODO - Upgrade to Truffle 5.0, see:
+    # https://github.com/trufflesuite/truffle/releases/tag/v5.0.0
+    npm i -g truffle^4.0.0
     ;;
 esac
 
