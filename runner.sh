@@ -47,7 +47,7 @@ case "$CI_LANGUAGE_PREFIX" in
     # Install latest Truffle v4
     # TODO - Upgrade to Truffle 5.0, see:
     # https://github.com/trufflesuite/truffle/releases/tag/v5.0.0
-    npm i -g truffle^4.0.0
+    npm i -g truffle@^4.0.0
     ;;
 esac
 
